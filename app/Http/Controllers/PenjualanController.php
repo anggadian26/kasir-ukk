@@ -195,7 +195,9 @@ class PenjualanController extends Controller
              $produkStok->update();
         }
 
-        return redirect()->route('index.penjualan')->with('toast_success', 'Transaksi Penjualan berhasil disimpan.');
+        session(['penjualan_id' => $penjualan->penjualan_id]);
+
+        return redirect()->route('success.penjualan')->with('toast_success', 'Transaksi Penjualan berhasil disimpan.');
     }
 
     public function detailData($id){
@@ -219,5 +221,47 @@ class PenjualanController extends Controller
         $penjualan = DB::select($queryPenjualan, [$id]);
 
         return response()->json(['detail' => $detail, 'penjualan' => $penjualan]);
+    }
+
+    public function transactionSuccess() {
+        $penjualan_id = request()->session()->get('penjualan_id');
+
+        $penjualan = PenjualanModel::find($penjualan_id);
+
+        return view('penjualan.success', compact('penjualan'));
+    }
+
+    public function notaPenjualan() {
+
+        $penjualan_id = request()->session()->get('penjualan_id');
+        // dd($penjualan_id);
+        $query = "
+            SELECT A.*, B.product_name, B.product_code, B.product_purcase
+            FROM detail_penjualan A
+            INNER JOIN product B ON A.product_id = B.product_id
+            WHERE A.penjualan_id = ?
+        ";
+
+        $detail = DB::select($query, [$penjualan_id]);
+
+        $queryPenjualan = "
+            SELECT A.*, B.name
+            FROM penjualan A
+            INNER JOIN users B ON A.record_id = B.id
+            WHERE A.penjualan_id = ?
+        ";
+
+        $queryPenjualan = "
+            SELECT A.*, B.name, C.role
+            FROM penjualan A
+            INNER JOIN users B ON A.record_id = B.id
+            INNER JOIN role C ON B.role_id = C.role_id
+            WHERE A.penjualan_id = ?
+        ";
+
+        $penjualanselect = DB::select($queryPenjualan, [$penjualan_id]);
+        $penjualan = $penjualanselect[0];
+       
+        return view('penjualan.nota.nota-kecil', compact('penjualan', 'detail'));
     }
 }
