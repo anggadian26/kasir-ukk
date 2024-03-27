@@ -23,6 +23,9 @@ class UserSeeder extends Seeder
         DB::table('role')->insert([
             'role' => 'manager'
         ]);
+        DB::table('role')->insert([
+            'role' => 'kasir'
+        ]);
 
         DB::table('users')->insert([
             'username'  => 'admin',
@@ -42,6 +45,13 @@ class UserSeeder extends Seeder
             'username'  => 'manager',
             'name'      => 'Violet',
             'role_id'   => 3,
+            'password'  => Hash::make('password')
+        ]);
+
+        DB::table('users')->insert([
+            'username'  => 'kasir',
+            'name'      => 'Rouncedel Jin',
+            'role_id'   => 4,
             'password'  => Hash::make('password')
         ]);
 

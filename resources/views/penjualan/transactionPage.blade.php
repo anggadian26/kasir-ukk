@@ -69,7 +69,7 @@
             {{-- contentdisini --}}
             <div class="layout-page">
                 <!-- Navbar -->
-                @include('partials.navbar')
+                
                 <!-- / Navbar -->
 
                 <!-- Content wrapper -->

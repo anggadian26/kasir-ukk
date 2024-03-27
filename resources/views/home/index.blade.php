@@ -42,6 +42,11 @@
                                         <div class="col-sm-7">
                                             <div class="card-body">
                                                 <h5 class="card-title text-primary">Hallo {{ Auth::user()->name }}! 🎉</h5>
+                                                @if ($loggedInUser->role->role == 'kasir')
+                                                    <p class="mb-4">
+                                                        Total Penjualan Anda sudah mencapai <span class="fw-bold">{{ $total_penjualan }} kali</span>, tetap semangat dan jangan menyerah 💪
+                                                    </p>
+                                                @endif
                                                 @if ($loggedInUser->role->role == 'admin')
                                                     <p class="mb-4">
                                                         Total Penjualan Anda sudah mencapai <span class="fw-bold">{{ $total_penjualan }} kali</span> dan sudah melakukan pembelian sebanyak <span class="fw-bold">{{ $total_pembelian }} kali</span>, tetap semangat dan jangan menyerah 💪

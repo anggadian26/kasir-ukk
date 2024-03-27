@@ -45,6 +45,14 @@
                 </a>
             </li>
         @endif
+        @if ($loggedInUser->role->role == 'kasir')
+        <li class="menu-item {{ request()->routeIs('index.penjualan') ? 'active' : '' }}">
+            <a href="{{ route('index.penjualan') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cart"></i>
+                <div data-i18n="Analytics">Transaksi</div>
+            </a>
+        </li>  
+        @endif
         <li class="menu-item {{ request()->routeIs('index.pemasukkan') ? 'active' : '' }}">
             <a href="{{ route('index.pemasukkan') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-trending-up"></i>
@@ -76,6 +84,7 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Finansial</span>
         </li>
+        @if ($loggedInUser->role->role == 'admin' || $loggedInUser->role->role == 'manager' || $loggedInUser->role->role == 'owner')
         <li class="menu-item {{ request()->routeIs('index.piutang') ? 'active' : '' }}">
             <a href="{{ route('index.piutang') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-credit-card"></i>
@@ -88,11 +97,22 @@
                 <div data-i18n="Analytics">Utang</div>
             </a>
         </li>
+        @endif
+
+        @if ($loggedInUser->role->role == 'kasir')
+        <li class="menu-item {{ request()->routeIs('index.piutang') ? 'active' : '' }}">
+            <a href="{{ route('index.piutang') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-credit-card"></i>
+                <div data-i18n="Analytics">Piutang</div>
+            </a>
+        </li>
+        @endif
 
         {{-- Laporan --}}
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Laporan</span>
         </li>
+        @if ($loggedInUser->role->role == 'admin' || $loggedInUser->role->role == 'manager' || $loggedInUser->role->role == 'owner')    
         <li class="menu-item {{ request()->routeIs('index.laporanPenjualan') ? 'active' : '' }}">
             <a href="{{ route('index.laporanPenjualan') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-report"></i>
@@ -123,6 +143,16 @@
                 <div data-i18n="Analytics">Laporan Laba Rugi</div>
             </a>
         </li>
+        @endif
+
+        @if ($loggedInUser->role->role == 'kasir')
+        <li class="menu-item {{ request()->routeIs('index.laporanPenjualan') ? 'active' : '' }}">
+            <a href="{{ route('index.laporanPenjualan') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-report"></i>
+                <div data-i18n="Analytics">Laporan Penjualan</div>
+            </a>
+        </li>
+        @endif
 
         {{-- Master --}}
         <li class="menu-header small text-uppercase">
