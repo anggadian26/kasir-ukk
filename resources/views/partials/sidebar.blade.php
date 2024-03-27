@@ -53,6 +53,7 @@
             </a>
         </li>  
         @endif
+        @if ($loggedInUser->role->role == 'admin' || $loggedInUser->role->role == 'manager' || $loggedInUser->role->role == 'owner')  
         <li class="menu-item {{ request()->routeIs('index.pemasukkan') ? 'active' : '' }}">
             <a href="{{ route('index.pemasukkan') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-trending-up"></i>
@@ -65,6 +66,15 @@
                 <div data-i18n="Analytics">Pengeluaran</div>
             </a>
         </li>
+        @endif
+        @if ($loggedInUser->role->role == 'kasir')
+        <li class="menu-item {{ request()->routeIs('index.pemasukkan') ? 'active' : '' }}">
+            <a href="{{ route('index.pemasukkan') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-trending-up"></i>
+                <div data-i18n="Analytics">Pemasukkan</div>
+            </a>
+        </li>
+        @endif
         @if ($loggedInUser->role->role == 'admin' || $loggedInUser->role->role == 'manager')
             <li class="menu-item {{ request()->routeIs('index.returnBarang') ? 'active' : '' }}">
                 <a href="{{ route('index.returnBarang') }}" class="menu-link">

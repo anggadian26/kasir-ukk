@@ -69,7 +69,7 @@
             {{-- contentdisini --}}
             <div class="layout-page">
                 <!-- Navbar -->
-                
+
                 <!-- / Navbar -->
 
                 <!-- Content wrapper -->
@@ -105,7 +105,7 @@
                                 </div>
                             </div>
                             @include('penjualan.modal.pilihProdukModal')
-                            
+
                             <div class="table-responsive text-nowrap">
                                 <table class="table table-bordered table-striped">
                                     <thead>
@@ -137,7 +137,8 @@
                                     <div class="tampil-terbilang"></div>
                                 </div>
                                 <div class="col-lg-4">
-                                    <form action="{{ route('saveTransaction.penjualan') }}" class="form-penjualan" method="post">
+                                    <form action="{{ route('saveTransaction.penjualan') }}" class="form-penjualan"
+                                        method="post">
                                         @csrf
                                         <input type="hidden" name="penjualan_id" value="{{ $penjualan_id }}">
                                         <input type="hidden" name="total_harga" id="totalInputan">
@@ -161,7 +162,8 @@
                                         </div>
                                         <div class="form-group row mb-2">
                                             <label for="
-                                            " class="col-lg-4 control-label">Bayar + PPN</label>
+                                            "
+                                                class="col-lg-4 control-label">Bayar + PPN</label>
                                             <div class="col-lg-8">
                                                 <input type="text" id="bayarrp" class="form-control" readonly>
                                             </div>
@@ -178,30 +180,33 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group row mb-2" id="diterima_input" >
+                                        <div class="form-group row mb-2" id="diterima_input">
                                             <label for="diterima" class="col-lg-4 control-label">Diterima</label>
                                             <div class="col-lg-8">
-                                                <input type="number" name="diterima" id="diterima" oninput="updateBayar()" 
-                                                    class="form-control">
+                                                <input type="number" name="diterima" id="diterima"
+                                                    oninput="updateBayar()" class="form-control">
                                             </div>
                                         </div>
                                         <div class="form-group row mb-2" id="kembalian_input">
                                             <label for="kembalian" class="col-lg-4 control-label">Kembalian</label>
                                             <div class="col-lg-8">
-                                                <input type="text" id="kembalian"
-                                                    class="form-control" readonly>
+                                                <input type="text" id="kembalian" class="form-control" readonly>
                                             </div>
                                         </div>
 
-                                        <div class="form-group row mb-2" id="nama_customer_input" style="display: none;">
-                                            <label for="uang_muka" class="col-lg-4 control-label">Nama Customer</label>
+                                        <div class="form-group row mb-2" id="nama_customer_input"
+                                            style="display: none;">
+                                            <label for="uang_muka" class="col-lg-4 control-label">Nama
+                                                Customer</label>
                                             <div class="col-lg-8">
                                                 <input type="text" name="nama_customer" id="nama_customer"
                                                     class="form-control">
                                             </div>
                                         </div>
-                                        <div class="form-group row mb-2" id="alamat_customer_input" style="display: none;">
-                                            <label for="uang_muka" class="col-lg-4 control-label">Alamat Customer</label>
+                                        <div class="form-group row mb-2" id="alamat_customer_input"
+                                            style="display: none;">
+                                            <label for="uang_muka" class="col-lg-4 control-label">Alamat
+                                                Customer</label>
                                             <div class="col-lg-8">
                                                 <textarea class="form-control" name="alamat_customer" id="alamat_customer" rows="3"></textarea>
                                             </div>
@@ -209,8 +214,8 @@
                                         <div class="form-group row mb-2" id="dp_zero_input" style="display: none;">
                                             <label for="" class="col-lg-4 control-label">DP 0%</label>
                                             <div class="col-lg-8">
-                                                <select name="dp_zero" class="form-select"
-                                                    id="dp_zero" aria-label="Default select example">
+                                                <select name="dp_zero" class="form-select" id="dp_zero"
+                                                    aria-label="Default select example">
                                                     <option value="N">Tidak</option>
                                                     <option value="Y">Ya</option>
                                                 </select>
@@ -247,6 +252,7 @@
                                         class="tf-icons bx bxs-save"></span> Simpan
                                     Transaksi</button>
                             </div>
+                          
                         </div>
                     </div>
                     <!-- / Content -->
@@ -367,7 +373,7 @@
 
         function updateBayar() {
             let diterima = parseFloat($('#diterima').val());
-            let totalString = $('#totalrp').val().replace(/\./g, ''); 
+            let totalString = $('#totalrp').val().replace(/\./g, '');
             let totalReplace = totalString.replace(/[^\d.-]/g, '');
             let bayar = parseFloat(totalReplace);
 
@@ -378,11 +384,12 @@
 
             let kembalianResult = diterima - resultBayar;
 
-            if(isNaN(kembalianResult)) {
+            if (isNaN(kembalianResult)) {
                 kembalian = 0;
             } else {
                 kembalian = kembalianResult;
             }
+
 
             console.log(kembalian)
 
@@ -397,43 +404,71 @@
         }
 
         function isiForm(diterima, resultBayar, kembalian) {
-            let totalHarga = resultBayar; 
+            let totalHarga = resultBayar;
             console.log(totalHarga);
             $('#totalInputan').val(totalHarga);
-          
-            let totalItem = $('#detailTableBody tr').length; 
+
+            let totalItem = $('#detailTableBody tr').length;
 
             $('#total_item').val(totalItem);
 
-            let bayar = diterima; 
+            let bayar = diterima;
             $('#bayar').val(bayar);
             $('#kembalianInputan').val(kembalian);
         }
 
+
         function saveTransaksi() {
-            $('.form-penjualan').submit();
+            // $('.form-penjualan').submit();
+            if (validateTransaksi()) {
+                let diterima = parseFloat($('#diterima').val());
+                let totalString = $('#totalrp').val().replace(/\./g, '');
+                let totalReplace = totalString.replace(/[^\d.-]/g, '');
+                let bayar = parseFloat(totalReplace);
+
+                if (diterima <= bayar) {
+                    alert('Jumlah yang diterima harus lebih besar dari jumlah yang harus dibayar.');
+                    return; // Hentikan proses simpan transaksi jika validasi gagal
+                }
+                $('.form-penjualan').submit();
+            }
+        }
+
+        function validateTransaksi() {
+            let totalHarga = parseFloat($('#totalInputan').val());
+            let totalItem = parseInt($('#total_item').val());
+            let diterima = parseFloat($('#diterima').val());
+
+            if (totalHarga === 0 || totalItem === 0 || diterima === '') {
+                alert('Transaksi belum bisa tersimpan, pastikan untuk mengisi semuanya.');
+                return false; 
+            }
+
+            return true; 
         }
 
         $(document).ready(function() {
             $('#jenis_transaksi').change(function() {
                 if ($(this).val() === 'credit') {
-                    $('#uang_muka_input').show(); 
-                    $('#tanggal_jatuh_tempo_input').show(); 
-                    $('#nama_customer_input').show(); 
-                    $('#alamat_customer_input').show(); 
-                    $('#dp_zero_input').show(); 
-                    $('#diterima_input').hide(); 
+                    $('#uang_muka_input').show();
+                    $('#tanggal_jatuh_tempo_input').show();
+                    $('#nama_customer_input').show();
+                    $('#alamat_customer_input').show();
+                    $('#dp_zero_input').show();
+                    $('#diterima_input').hide();
                     $('#kembalian_input').hide();
                     $('#diterima').val(null);
                     updateBayar();
+                    $('#buttonNota').hide();
                 } else {
-                    $('#uang_muka_input').hide(); 
-                    $('#tanggal_jatuh_tempo_input').hide(); 
-                    $('#diterima_input').show(); 
+                    $('#uang_muka_input').hide();
+                    $('#tanggal_jatuh_tempo_input').hide();
+                    $('#diterima_input').show();
                     $('#kembalian_input').show();
-                    $('#nama_customer_input').hide(); 
-                    $('#alamat_customer_input').hide(); 
-                    $('#dp_zero_input').hide(); 
+                    $('#nama_customer_input').hide();
+                    $('#alamat_customer_input').hide();
+                    $('#dp_zero_input').hide();
+                    $('#buttonNota').show();
                 }
             });
         });

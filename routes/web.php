@@ -65,6 +65,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transaksi-create', [PenjualanController::class, 'create'])->name('transactionCreate.penjualan');
     Route::post('/save-transaksi-penjualan', [PenjualanController::class, 'store'])->name('saveTransaction.penjualan');
     Route::get('/penjualan-detail/{id}', [PenjualanController::class, 'detailData'])->name('penjualanDetail.penjualan');
+    
+    Route::get('/transaction-success', [PenjualanController::class, 'transactionSuccess'])->name('success.penjualan');
+    // nota penjualan
+    Route::get('/nota-penjualan', [PenjualanController::class, 'notaPenjualan'])->name('nota.penjualan');
     // Penjualan Transaksi
     Route::get('/transaksi-penjualan-page', [DetailPenjualanController::class, 'index'])->name('transactionPage.penjualan');
     Route::get('/search-product-penjualan', [DetailPenjualanController::class, 'searchProduct']);

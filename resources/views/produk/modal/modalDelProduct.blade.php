@@ -1,6 +1,6 @@
 <div class="modal fade" id="delProduct{{ $i->product_id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+        <div class="    ">
             
             <div class="modal-body">
                 <div class="row d-flex justify-content-center align-items-center">
