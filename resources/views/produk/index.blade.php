@@ -8,10 +8,11 @@
 @section('content')
     <div class="card p-3">
         @if ($loggedInUser->role->role == 'manager')
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a href="{{ route('addPage.product') }}" class="btn btn-primary">Tambah
-                Data</a>
-        </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-2">
+                <a href="{{ route('addPage.product') }}" class="btn btn-primary">Tambah
+                    Data</a>
+                <a href="{{ route('laporanMenipisHabis') }}" class="btn btn-success">laporan Stok Menipis & Habis</a>
+            </div>
         @endif
         <form action="#" method="get" class="mb-3 mt-3">
             @csrf
@@ -31,7 +32,9 @@
                     <select name="ctgr_product_id" class="form-select">
                         <option value="">- Semua -</option>
                         @foreach ($ctgr_product as $i)
-                            <option value="{{ $i->ctgr_product_id }}" {{ isset($_GET['ctgr_product_id']) && $_GET['ctgr_product_id'] == $i->ctgr_product_id ? 'selected' : '' }}>{{ $i->ctgr_product_name }}</option>
+                            <option value="{{ $i->ctgr_product_id }}"
+                                {{ isset($_GET['ctgr_product_id']) && $_GET['ctgr_product_id'] == $i->ctgr_product_id ? 'selected' : '' }}>
+                                {{ $i->ctgr_product_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -40,7 +43,9 @@
                     <select name="sub_ctgr_product_id" class="form-select">
                         <option value="">- Semua -</option>
                         @foreach ($sub_ctgr_product as $i)
-                            <option value="{{ $i->sub_ctgr_product_id }}" {{ isset($_GET['sub_ctgr_product_id']) && $_GET['sub_ctgr_product_id'] == $i->sub_ctgr_product_id ? 'selected' : '' }}>{{ $i->sub_ctgr_product_name }}</option>
+                            <option value="{{ $i->sub_ctgr_product_id }}"
+                                {{ isset($_GET['sub_ctgr_product_id']) && $_GET['sub_ctgr_product_id'] == $i->sub_ctgr_product_id ? 'selected' : '' }}>
+                                {{ $i->sub_ctgr_product_name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -48,8 +53,25 @@
                     <label for="" class="fw-bold">Status</label>
                     <select name="status" class="form-select">
                         <option value="">- Semua -</option>
-                        <option value="Y" {{ isset($_GET['status']) && $_GET['status'] == 'Y' ? 'selected' : '' }}>Aktif</option>
-                        <option value="N" {{ isset($_GET['status']) && $_GET['status'] == 'N' ? 'selected' : '' }}>Tidak Aktif</option>
+                        <option value="Y" {{ isset($_GET['status']) && $_GET['status'] == 'Y' ? 'selected' : '' }}>
+                            Aktif</option>
+                        <option value="N" {{ isset($_GET['status']) && $_GET['status'] == 'N' ? 'selected' : '' }}>
+                            Tidak Aktif</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="" class="fw-bold">Status Stok</label>
+                    <select name="status_stok" class="form-select">
+                        <option value="">- Semua -</option>
+                        <option value="A"
+                            {{ isset($_GET['status_stok']) && $_GET['status_stok'] == 'A' ? 'selected' : '' }}>
+                            Tersedia</option>
+                        <option value="M"
+                            {{ isset($_GET['status_stok']) && $_GET['status_stok'] == 'N' ? 'selected' : '' }}>
+                            Menipis</option>
+                        <option value="H"
+                            {{ isset($_GET['status_stok']) && $_GET['status_stok'] == 'H' ? 'selected' : '' }}>
+                            Habis</option>
                     </select>
                 </div>
                 <div class="col-md-2">
@@ -67,6 +89,7 @@
                         <th><strong>Merek</strong></th>
                         <th><strong>Kategori</strong></th>
                         <th><strong>Sub Kategori</strong></th>
+                        <th><strong>Status Stok</strong></th>
                         <th><strong>Status</strong></th>
                     </tr>
                 </thead>
@@ -88,24 +111,41 @@
                                         </button>
                                         <div class="dropdown-menu">
                                             <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal"
-                                                data-bs-target="#detailProduct{{ $i->product_id }}"><i class="bx bx-detail me-1"></i>
+                                                data-bs-target="#detailProduct{{ $i->product_id }}"><i
+                                                    class="bx bx-detail me-1"></i>
                                                 Detail</a>
                                             @if ($loggedInUser->role->role == 'manager')
-                                            <a class="dropdown-item" href="{{ route('editPage.product', ['id' => $i->product_id]) }}"><i
-                                                    class="bx bx-edit-alt me-1"></i>
-                                                Edit</a>
-                                            <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal"
-                                            data-bs-target="#delProduct{{ $i->product_id }}" ><i
-                                                    class="bx bx-trash me-1"></i>
-                                                Delete</a>
+                                                <a class="dropdown-item"
+                                                    href="{{ route('editPage.product', ['id' => $i->product_id]) }}"><i
+                                                        class="bx bx-edit-alt me-1"></i>
+                                                    Edit</a>
+
+                                                <button class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#delProduct{{ $i->product_id }}"><i
+                                                        class="bx bx-trash me-1"></i>
+                                                    Hapus</button>
                                             @endif
                                         </div>
+                                    </div>
+
                                 </td>
+
                                 <td>{{ $i->product_code }}</td>
                                 <td>{{ $i->product_name }}</td>
                                 <td>{{ $i->merek }}</td>
                                 <td>{{ $i->ctgr_product_name }}</td>
                                 <td>{{ $i->sub_ctgr_product_name }}</td>
+                                <td>
+                                    @if ($i->status_stok == 'A')
+                                        <span class="badge bg-success">Tersedia</span>
+                                    @endif
+                                    @if ($i->status_stok == 'M')
+                                        <span class="badge bg-warning">Menipis</span>
+                                    @endif
+                                    @if ($i->status_stok == 'H')
+                                        <span class="badge bg-danger">Habis</span>
+                                    @endif
+                                </td>
                                 <td>
                                     @if ($i->status == 'Y')
                                         <span class="badge rounded-pill bg-success">Aktif</span>
@@ -113,33 +153,34 @@
                                         <span class="badge rounded-pill bg-danger">Tidak Aktif</span>
                                     @endif
                                 </td>
-                            </tr> 
+                            </tr>
                         @endforeach
                     @endif
-                    
+
                 </tbody>
             </table>
         </div>
         <div class="mt-5">
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-end">
-                    <li class="page-item {{ ($product->currentPage() == 1) ? 'disabled' : '' }} prev">
+                    <li class="page-item {{ $product->currentPage() == 1 ? 'disabled' : '' }} prev">
                         <a class="page-link" href="{{ $product->previousPageUrl() }}" aria-label="Previous">
                             <i class="tf-icon bx bx-chevrons-left"></i>
                         </a>
                     </li>
                     @for ($i = 1; $i <= $product->lastPage(); $i++)
-                        <li class="page-item {{ ($product->currentPage() == $i) ? 'active' : '' }}">
+                        <li class="page-item {{ $product->currentPage() == $i ? 'active' : '' }}">
                             <a class="page-link" href="{{ $product->url($i) }}">{{ $i }}</a>
                         </li>
                     @endfor
-                    <li class="page-item {{ ($product->currentPage() == $product->lastPage()) ? 'disabled' : '' }} next">
+                    <li class="page-item {{ $product->currentPage() == $product->lastPage() ? 'disabled' : '' }} next">
                         <a class="page-link" href="{{ $product->nextPageUrl() }}" aria-label="Next">
                             <i class="tf-icon bx bx-chevrons-right"></i>
                         </a>
                     </li>
                 </ul>
-                <span>Total data {{ $total[0]->totalData }}, halaman {{ $product->currentPage() }} dari {{ $product->lastPage() }}</span>
+                <span>Total data {{ $total[0]->totalData }}, halaman {{ $product->currentPage() }} dari
+                    {{ $product->lastPage() }}</span>
             </nav>
         </div>
     </div>

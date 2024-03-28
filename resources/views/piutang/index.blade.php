@@ -7,6 +7,13 @@
 @endsection
 @section('content')
     <div class="card p-3">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEnd"
+                aria-controls="offcanvasEnd">
+                Batas Tenggat
+            </button>
+        </div>
+        @include('piutang.modal.modaltenggat')
         <form action="#" method="get" class="mb-3 mt-3">
             @csrf
             <div class="row mb-3">
@@ -57,7 +64,6 @@
                         </tr>
                     @else
                         @foreach ($piutang as $i)
-                           
                             <tr>
                                 <td><span class="badge bg-primary">{{ $i->nota }}</span></td>
                                 <td><span class="fw-bold">{{ $i->nama_customer }}</span></td>
@@ -79,9 +85,9 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
-                                                onclick="detailPiutang('{{ $i->piutang_id }}')" data-bs-toggle="modal"
-                                                data-bs-target="#modalDetailPiutang"><i class="bx bx-detail me-1"></i>
+                                            <a class="dropdown-item" onclick="detailPiutang('{{ $i->piutang_id }}')"
+                                                data-bs-toggle="modal" data-bs-target="#modalDetailPiutang"><i
+                                                    class="bx bx-detail me-1"></i>
                                                 Detail Pembayaran</a>
                                         </div>
                                     </div>
@@ -131,12 +137,12 @@
                     var detailData = response.piutang;
                     var tableBody = $('#table-detail tbody');
 
-                    if(response.piutang_base.catatan == null) {
+                    if (response.piutang_base.catatan == null) {
                         var catatan = '';
                     } else {
                         var catatan = response.piutang_base.catatan
                     }
-
+                    $('#tanggal_jatuh_tempo').text(': ' + response.piutang_base.tanggal_jatuh_tempo)
                     $('#nama_customer').text(': ' + response.piutang_base.nama_customer);
                     $('#alamat_customer').text(': ' + response.piutang_base.alamat_customer);
                     $('#uangMuka').text(': Rp' + formatCurrency(response.piutang_base.uang_muka));

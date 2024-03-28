@@ -122,6 +122,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/laporan-labarugi/download', [LaporanLabaRugiController::class, 'downloadLaporan'])->name('download.laporanLabaRugi');
     // laporan stok
     Route::get('/laporan-stok-download', [StokController::class, 'downloadLaporan'])->name('download.stokLaporan');
+    // Route::get('/laporanMenipisHabis')
 
     /* -- MASTER -- */ 
     // Diskon

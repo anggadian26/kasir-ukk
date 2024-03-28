@@ -26,6 +26,7 @@ class DetailPembelianController extends Controller
             SELECT A.*, B.total_stok
             FROM product A
             INNER JOIN stok B ON A.product_id = B.product_id
+            WHERE A.status = 'Y'
             ORDER BY A.product_code, A.product_name
         ";
         $product = DB::select($queryProduk);
@@ -48,7 +49,7 @@ class DetailPembelianController extends Controller
             SELECT A.*, B.total_stok
             FROM product A
             INNER JOIN stok B ON A.product_id = B.product_id
-            WHERE A.product_name LIKE :searchTerm
+            WHERE A.product_name LIKE :searchTerm AND A.status = 'Y'
             ORDER BY A.product_code, A.product_name
         ";
         

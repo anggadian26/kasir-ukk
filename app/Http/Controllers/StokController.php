@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProductModel;
 use App\Models\StokModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -36,6 +37,7 @@ class StokController extends Controller
 
         $total = DB::select($queryCount);
 
+        $this->statusStokAction();
         return view('stok.index', compact(['stok', 'total']));
     }
 
@@ -56,5 +58,35 @@ class StokController extends Controller
         $pdf->setPaper("a4", "potrait");
             
         return $pdf->download('laporan-stok-'. $tanggal_hariIni . '.pdf');
+    }
+
+    private function statusStokAction() {
+        $query = " 
+            SELECT A.*, B.total_stok
+            FROM product A
+            INNER JOIN stok B ON A.product_id = B.product_id
+        ";
+        $produk = DB::select($query);
+
+        foreach($produk as $item) { 
+            $product = ProductModel::find($item->product_id);
+            if($item->total_stok <= $item->min_stok) {
+                $product->update([
+                    "status_stok"   => 'M'
+                ]);
+            }
+
+            if($item->total_stok == 0) {
+                $product->update([
+                    "status_stok"   => 'H'
+                ]);
+            }
+
+            if($item->total_stok > $item->min_stok) {
+                $product->update([
+                    "status_stok"   => 'A'
+                ]);
+            }
+        }
     }
 }

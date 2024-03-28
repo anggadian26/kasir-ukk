@@ -10,6 +10,10 @@
                     <div class="col-10">
                         <table>
                             <tr>
+                                <td>Tanggal Jatuh Tempo</td>
+                                <td class="fw-bold" id="tanggal_jatuh_tempo"></td>
+                            </tr>
+                            <tr>
                                 <td>Nama Customer</td>
                                 <td class="fw-bold" id="nama_customer"></td>
                             </tr>

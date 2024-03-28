@@ -34,6 +34,7 @@ class ProdukController extends Controller
         $ctgr_product_id = $request->ctgr_product_id;
         $sub_ctgr_product_id = $request->sub_ctgr_product_id;
         $status = $request->status;
+        $status_stok = $request->status_stok;
 
         $query = ProductModel::query()
             ->select('A.*', 'B.ctgr_product_id', 'B.sub_ctgr_product_name', 'C.ctgr_product_name', 'D.name', 'E.total_stok')
@@ -57,6 +58,9 @@ class ProdukController extends Controller
             ->when($status, function($query, $status) {
                 return $query->where('A.status', '=', $status);
             })
+            ->when($status_stok, function($query, $status_stok) {
+                return $query->where('A.status_stok', '=', $status_stok);
+            })
             ->orderBy('A.product_code')
             ->orderBy('A.product_name')
             ->orderBy('B.sub_ctgr_product_name');
@@ -68,6 +72,8 @@ class ProdukController extends Controller
             FROM product";
 
         $total = DB::select($queryCount);
+
+        $this->statusStokAction();
 
         return view('produk.index', compact(['ctgr_product', 'sub_ctgr_product', 'product', 'total']));
     }
@@ -93,6 +99,7 @@ class ProdukController extends Controller
             'merek'                 => 'required',
             'product_purcase'       => 'required',
             'product_price'         => 'required',
+            'min_stok'              => 'required',
         ]);
 
 
@@ -107,8 +114,10 @@ class ProdukController extends Controller
             'merek'                 => $val['merek'],
             'product_purcase'       => $val['product_purcase'],
             'product_price'         => $val['product_price'],
+            'min_stok'              => $val['min_stok'],
             'diskon'                => 0,
             'status'                => 'Y',
+            'status_stok'           => 'H',
             'record_id'             => $user_id
         ];
 
@@ -141,6 +150,7 @@ class ProdukController extends Controller
             'merek'                 => 'required',
             'product_purcase'       => 'required',
             'product_price'         => 'required',
+            'min_stok'              => 'required',
             'status'                => 'required'
         ]);
 
@@ -153,6 +163,7 @@ class ProdukController extends Controller
             'merek'                 => $val['merek'],
             'product_purcase'       => $val['product_purcase'],
             'product_price'         => $val['product_price'],
+            'min_stok'              => $val['min_stok'],
             'status'                => $request->status,
             'record_id'             => $user_id
         ]);
@@ -174,5 +185,35 @@ class ProdukController extends Controller
             $product->delete();
         }
         return redirect()->route('index.produk')->with('toast_success', 'Data Produk berhasil dihapus!');
+    }
+
+    private function statusStokAction() {
+        $query = " 
+            SELECT A.*, B.total_stok
+            FROM product A
+            INNER JOIN stok B ON A.product_id = B.product_id
+        ";
+        $produk = DB::select($query);
+
+        foreach($produk as $item) { 
+            $product = ProductModel::find($item->product_id);
+            if($item->total_stok <= $item->min_stok) {
+                $product->update([
+                    "status_stok"   => 'M'
+                ]);
+            }
+
+            if($item->total_stok == 0) {
+                $product->update([
+                    "status_stok"   => 'H'
+                ]);
+            }
+
+            if($item->total_stok > $item->min_stok) {
+                $product->update([
+                    "status_stok"   => 'A'
+                ]);
+            }
+        }
     }
 }

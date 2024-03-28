@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetailPiutangModel;
+use App\Models\NotifPiutangModel;
 use App\Models\PemasukkanModel;
 use App\Models\PengeluaranModel;
 use App\Models\PenjualanModel;
@@ -45,7 +46,19 @@ class PiutangController extends Controller
         ";
 
         $total = DB::select($queryCount);
-        return view("piutang.index", compact('piutang', 'total'));
+
+        $queryNotifPiutang = "
+            SELECT A.*, B.nama_customer, B.alamat_customer, B.jumlah_piutang, B.uang_muka, C.nota
+            FROM notif_piutang A 
+            INNER JOIN piutang B ON A.piutang_id = B.piutang_id
+            INNER JOIN penjualan C ON B.penjualan_id = C.penjualan_id
+            ORDER BY A.tanggal_tenggat ASC
+        ";
+
+        $notifPiutang = DB::select($queryNotifPiutang);
+
+        $this->notifPiutang();
+        return view("piutang.index", compact('piutang', 'total', 'notifPiutang'));
     }
 
     public function detailPiutang($id)
@@ -119,5 +132,29 @@ class PiutangController extends Controller
 
 
         return redirect()->route('index.piutang')->with('toast_success', 'Pembayaran Piutang telah sukses!');
+    }
+    
+    private function notifPiutang() {
+        $now = Carbon::now()->subDays(1)->toDateString();
+
+        $piutang = PiutangModel::where('tanggal_jatuh_tempo', $now)->get();
+
+        if($piutang) {
+            foreach($piutang as $i) {
+                $detail = DetailPiutangModel::find($i->piutang_id)->latest()->first();
+                $existingNotification = NotifPiutangModel::where('piutang_id', $i->piutang_id)->exists();
+
+                if(!$existingNotification && $detail) {
+                    $data = [
+                        "piutang_id"        => $i->piutang_id,
+                        "tanggal_tenggat"   => $i->tanggal_jatuh_tempo,
+                        "terakhir_dibayar"  => $detail->detail_tanggal,
+                        "sisa_pembayaran"   => $detail->sisa
+                    ];
+
+                    NotifPiutangModel::create($data);
+                }
+            }
+        }
     }
 }

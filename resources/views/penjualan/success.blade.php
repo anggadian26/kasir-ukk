@@ -129,6 +129,17 @@
         // Menambahkan event listener untuk keypress di level dokumen
         document.addEventListener('keypress', handleKeyPress);
     </script>
+    <script>
+        let body = document.body;
+        let html = document.documentElement;
+        let height = Math.max(
+                body.scrollHeight, body.offsetHeight,
+                html.clientHeight, html.scrollHeight, html.offsetHeight
+            );
+
+        document.cookie = "innerHeight=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "innerHeight="+ ((height + 50) * 0.264583);
+    </script>
 </body>
 
 </html>

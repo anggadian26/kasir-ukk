@@ -7,6 +7,7 @@ use App\Models\DetailPiutangModel;
 use App\Models\PemasukkanModel;
 use App\Models\PenjualanModel;
 use App\Models\PiutangModel;
+use App\Models\ProductModel;
 use App\Models\StokModel;
 use App\Models\SupplierModel;
 use Carbon\Carbon;
@@ -45,6 +46,8 @@ class PenjualanController extends Controller
             FROM penjualan";
 
         $total = DB::select($queryCount);
+
+        $this->statusStokAction();
 
         return view('penjualan.index', compact('penjualan', 'total'));
     }
@@ -263,5 +266,35 @@ class PenjualanController extends Controller
         $penjualan = $penjualanselect[0];
        
         return view('penjualan.nota.nota-kecil', compact('penjualan', 'detail'));
+    }
+
+    private function statusStokAction() {
+        $query = " 
+            SELECT A.*, B.total_stok
+            FROM product A
+            INNER JOIN stok B ON A.product_id = B.product_id
+        ";
+        $produk = DB::select($query);
+
+        foreach($produk as $item) { 
+            $product = ProductModel::find($item->product_id);
+            if($item->total_stok <= $item->min_stok) {
+                $product->update([
+                    "status_stok"   => 'M'
+                ]);
+            }
+
+            if($item->total_stok == 0) {
+                $product->update([
+                    "status_stok"   => 'H'
+                ]);
+            }
+
+            if($item->total_stok > $item->min_stok) {
+                $product->update([
+                    "status_stok"   => 'A'
+                ]);
+            }
+        }
     }
 }

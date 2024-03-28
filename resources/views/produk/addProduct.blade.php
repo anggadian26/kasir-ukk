@@ -84,7 +84,7 @@
                 <input type="hidden" id="hiddenHargaBeliInput" name="product_purcase" />
             </div>
 
-            <div class="row justify-content-start mb-5">
+            <div class="row justify-content-start mb-3">
                 <label class="col-sm-2 col-form-label text-start" for="basic-default-name">Harga Jual</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control @error('product_purcase') is-invalid @enderror" id="nominalInput"
@@ -97,6 +97,19 @@
                     </div>
                 <input type="hidden" id="hiddenNominalInput" name="product_price" />
             </div>
+
+            <div class="row justify-content-start mb-5">
+                <label class="col-sm-2 col-form-label text-start" for="basic-default-name">Stok Minimal</label>
+                <div class="col-sm-6">
+                    <input type="number" name="min_stok" class="form-control @error('product_name') is-invalid @enderror"
+                        id="basic-default-name" value="{{ old('min_stok') }}">
+                    @error('min_stok')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            </div> 
 
 
             <div class="row justify-content-start mb-3">

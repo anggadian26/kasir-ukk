@@ -98,6 +98,19 @@
                     </div>
                 </div>
                 <div class="row justify-content-start mb-3">
+                    <label class="col-sm-2 col-form-label text-start" for="basic-default-name">Stok Minimal</label>
+                    <div class="col-sm-6">
+                        <input type="text" name="min_stok"
+                            class="form-control @error('min_stok') is-invalid @enderror" id="basic-default-name"
+                            value="{{ old('min_stok', $product->min_stok) }}">
+                        @error('min_stok')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="row justify-content-start mb-3">
                     <label class="col-sm-2 col-form-label text-start" for="basic-default-name">Status</label>
                     <div class="col-sm-6">
                         <select name="status" class="form-select @error('status') is-invalid @enderror"

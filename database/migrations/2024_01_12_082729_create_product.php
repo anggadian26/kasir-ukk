@@ -20,7 +20,9 @@ return new class extends Migration
             $table->decimal('product_purcase', 20, 0);
             $table->decimal('product_price', 20, 0);
             $table->tinyInteger('diskon')->default(0);
+            $table->integer('min_stok');
             $table->enum('status', ['Y', 'N']);
+            $table->enum('status_stok', ['A', 'M', 'H']); // A => Aman, M => Menipis, H => Habis
             $table->foreignId('record_id');
             $table->timestamps();
         });
